@@ -4,20 +4,28 @@
     <div v-if="location_number <= location_count" :key="location_number">
       <h3>LOCATION #{{ getDayNumber() }}</h3>
       <p>{{ getGameName().toUpperCase() }}</p>
-      <Game :map="getMap()" :number="location_number" :threshold="getThreshold()" :target="getTarget()"
-        :debug_mode="debug_mode" :on_complete="onComplete()" />
+      <Game
+        :map="getMap()"
+        :number="location_number"
+        :threshold="getThreshold()"
+        :target="getTarget()"
+        :debug_mode="debug_mode"
+        :on_complete="onComplete()"
+      />
+      <div>
+        <h2>PICK A DATE</h2>
+        <input type="date" id="date_input" v-model="date_input" />
+        <br />
+        <button @click="updateLocation" class="date-button">
+          TAKE ME BACK
+        </button>
+      </div>
       <br />
       <h3>
-        <a href="https://forms.gle/L1vSvZaWFRmz6Vug7">Fill out this Survey To help out!</a>
+        <a href="https://forms.gle/L1vSvZaWFRmz6Vug7"
+          >Fill out this Survey To help out!</a
+        >
       </h3>
-      <!-- <div class="location_select">
-        <h2>Location Selector</h2>
-        <select v-model="location_number">
-          <option v-for="i in max_location_number" :key="i" :value="i">
-            #{{ i }}
-          </option>
-        </select>
-      </div> -->
       <h3>THIS HAS NOTHING TO DO WITH SEGA</h3>
       <h3>MADE BY <a href="paul@sarda.dev">paul@sarda.dev</a></h3>
     </div>
@@ -49,7 +57,7 @@ import { games } from "./games";
 import { map_info } from "./maps";
 import { getGuesses, resetGuessesCookie } from "./history";
 import { DialogWrapper } from "vue3-promise-dialog";
-import { confirm, getLocationNumber, getDayNumber } from "./misc";
+import { getLocationNumber, getDayNumber } from "./misc";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -58,25 +66,17 @@ export default defineComponent({
     DialogWrapper,
   },
   data() {
-    const location_number = getLocationNumber();
     return {
       show: false,
       debug_mode: process.env.BASE_URL == "/",
       current_cookie: getGuesses(document),
-      max_location_number: location_number,
-      location_number: location_number,
+      location_number: getLocationNumber(new Date()),
       location_count: Object.keys(games).length,
       dev_possible: process.env.BASE_URL == "/",
+      date_input: new Date().toISOString(),
     };
   },
   methods: {
-    openStats: async () => {
-      if (await confirm()) {
-        console.log("YES");
-      } else {
-        console.log("NO");
-      }
-    },
     onComplete() {
       console.log("Jobs done");
     },
@@ -96,7 +96,17 @@ export default defineComponent({
       return map_info[games[this.location_number].map].threshold;
     },
     getDayNumber() {
-      return getDayNumber();
+      return getDayNumber(new Date(this.date_input));
+    },
+    updateLocation() {
+      const date = new Date(this.date_input);
+      if (date > new Date()) {
+        alert("You can't pick a future date!");
+        return;
+      }
+      this.location_number = getLocationNumber(date);
+      this.current_cookie = getGuesses(document);
+      this.location_count = Object.keys(games).length;
     },
   },
 });
@@ -126,28 +136,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.stats {
-  font-family: "Nanum Brush Script", cursive;
-  border: none;
-  color: white;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  background-color: #a8a8a8;
-  font-size: 15px;
-  margin: 4px 2px;
-  border-radius: 8px;
-}
-
-.stats:hover {
-  background-color: lightgray;
-  cursor: pointer;
-}
-
 .location_select h2 {
   margin-bottom: 0px;
 }
@@ -157,5 +145,20 @@ body {
   font-size: 20px;
   background-color: #868686;
   color: white;
+}
+
+.date-button {
+  font-family: "Nanum Brush Script", cursive;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 30px;
+  background-color: #a8a8a8;
+  color: white;
+  transition-duration: 0.4s;
 }
 </style>

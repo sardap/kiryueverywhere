@@ -98,7 +98,7 @@ export const map_info: Record<string, mapInfo> = {
   yakuza_7_yokohama_map: {
     threshold: 5,
     game_name: "Yakuza 7",
-    plain_name: "Yakuza 7 Yokohama"
+    plain_name: "Yakuza 7 Yokohama",
   },
   ishin_gion_map: {
     threshold: 5,
@@ -119,5 +119,5 @@ export const map_info: Record<string, mapInfo> = {
     threshold: 5,
     game_name: "Real Life",
     plain_name: "Kabukicho",
-  }
+  },
 };

@@ -627,7 +627,8 @@ export const games: Record<number, gameInfo> = {
   154: {
     map: "yakuza_kiwami_2_osaka_map",
     target: {
-      x: 15.350376131582303, y: - 27.090909090909093
+      x: 15.350376131582303,
+      y: -27.090909090909093,
     },
   },
   155: {
@@ -893,7 +894,6 @@ export const games: Record<number, gameInfo> = {
   220: {
     map: "yakuza_6_kamuro_map",
     target: { x: -4.604023364380596, y: 16.363636363636363 },
-
   },
   221: {
     map: "yakuza_kiwami_2_kamuro_map",

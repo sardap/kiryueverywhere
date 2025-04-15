@@ -1,19 +1,34 @@
 <template>
   <div class="game">
-    <img :src="`${public_path}games/${number}/${active_pic}.webp`" class="game_image" />
+    <img
+      :src="`${public_path}games/${number}/${active_pic}.webp`"
+      class="game_image"
+    />
     <br />
     <div class="buttons">
       <div>
-        <button @click="showLocationImage(1)" :class="getClassForLocationImage(1)">
+        <button
+          @click="showLocationImage(1)"
+          :class="getClassForLocationImage(1)"
+        >
           1
         </button>
-        <button @click="showLocationImage(2)" :class="getClassForLocationImage(2)">
+        <button
+          @click="showLocationImage(2)"
+          :class="getClassForLocationImage(2)"
+        >
           2
         </button>
-        <button @click="showLocationImage(3)" :class="getClassForLocationImage(3)">
+        <button
+          @click="showLocationImage(3)"
+          :class="getClassForLocationImage(3)"
+        >
           3
         </button>
-        <button @click="showLocationImage(4)" :class="getClassForLocationImage(4)">
+        <button
+          @click="showLocationImage(4)"
+          :class="getClassForLocationImage(4)"
+        >
           4
         </button>
       </div>
@@ -35,7 +50,10 @@
     <canvas id="canvas" v-on:click="canvasClick" />
     <br />
     <div v-if="this.getState() == `playing`">
-      <button :class="this.selected_x == null ? `submit disabled` : `submit`" @click="submitButton">
+      <button
+        :class="this.selected_x == null ? `submit disabled` : `submit`"
+        @click="submitButton"
+      >
         SUBMIT
       </button>
     </div>
@@ -43,7 +61,11 @@
       <button @click="shareClick" class="submit">{{ this.share_text }}</button>
     </div>
     <img id="map" :src="`${public_path}maps/${map}.webp`" hidden="true" />
-    <img id="target_icon" :src="`${this.public_path}images/blad_kiryu.webp`" hidden="true" />
+    <img
+      id="target_icon"
+      :src="`${this.public_path}images/blad_kiryu.webp`"
+      hidden="true"
+    />
     <div v-if="debug_mode">
       <p>DEBUG X: {{ this.click_debug_x }}</p>
       <p>DEBUG Y: {{ this.click_debug_y }}</p>
@@ -195,14 +217,13 @@ const pic_count = 4;
       const dist_x = Math.abs(percent_pos.x - this.target.x);
       const dist_y = Math.abs(percent_pos.y - this.target.y);
 
-      const image = document.getElementById("map") as HTMLImageElement;
       this.click_debug_x = `px: ${percent_pos.x}`;
       this.click_debug_y = `py: ${percent_pos.y}`;
 
       return dist_x <= this.threshold && dist_y <= this.threshold;
     },
     shareClick() {
-      let text = `#KIRYU_EVERYWHERE #${getDayNumber()} 🗺️\n`;
+      let text = `#KIRYU_EVERYWHERE #${getDayNumber(new Date())} 🗺️\n`;
       const guesses = getGuessesForLocation(document, this.number);
       for (let i = 0; i < guesses.length; i++) {
         const dist_x = Math.abs(guesses[i].x - this.target.x);
@@ -354,7 +375,6 @@ const pic_count = 4;
           guess_size
         );
         ctx.stroke();
-        i++;
       }
 
       if (this.selected_x && this.selected_y) {

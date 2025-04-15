@@ -1,8 +1,7 @@
-
 export enum FinalGuess {
   NotFinal,
   Win,
-  Lose
+  Lose,
 }
 
 function StringToFinalGuess(v: number): FinalGuess {
@@ -47,10 +46,8 @@ export function resetCookie(document: Document, cookie_name: string): void {
   const d = new Date();
   d.setTime(d.getTime());
   const expires = "expires=" + d.toUTCString();
-  document.cookie =
-    cookie_name + "=" + "{}" + ";" + expires;
+  document.cookie = cookie_name + "=" + "{}" + ";" + expires;
 }
-
 
 const old_guesses_cookie_key = "guesses";
 const guesses_cookie_key = "new_guesses";
@@ -64,7 +61,6 @@ export function getGuesses(document: Document): guessCookie {
   if (old_cookie != "") {
     resetCookie(document, old_guesses_cookie_key);
   }
-
 
   const result: guessCookie = { guesses: {} };
 
@@ -82,17 +78,23 @@ export function getGuesses(document: Document): guessCookie {
     const entires = str.split("Y");
     const locations: guessHistoryEntry[] = [];
     for (let j = 0; j < entires.length - 1; j++) {
-      const splits: string[] = entires[j].split(',')
-      locations.push({ x: Number(splits[0]), y: Number(splits[1]), final_guess: StringToFinalGuess(Number(splits[2])) });
+      const splits: string[] = entires[j].split(",");
+      locations.push({
+        x: Number(splits[0]),
+        y: Number(splits[1]),
+        final_guess: StringToFinalGuess(Number(splits[2])),
+      });
     }
     result.guesses[Number(loc_number)] = locations;
   }
 
-
   return result;
 }
 
-export function saveGuesses(document: Document, current_cookie: guessCookie): void {
+export function saveGuesses(
+  document: Document,
+  current_cookie: guessCookie
+): void {
   const d = new Date();
   d.setTime(d.getTime() + 36500 * 24 * 60 * 60 * 1000);
   const expires = "expires=" + d.toUTCString();
@@ -110,8 +112,8 @@ export function saveGuesses(document: Document, current_cookie: guessCookie): vo
   }
 
   let str = JSON.stringify(reduced);
-  str = str.replaceAll(' ', '');
-  str = `{${str}}`
+  str = str.replaceAll(" ", "");
+  str = `{${str}}`;
   if (str.length > 1000) {
     resetCookie(document, guesses_cookie_key);
     return;
@@ -120,8 +122,10 @@ export function saveGuesses(document: Document, current_cookie: guessCookie): vo
   document.cookie = guesses_cookie_key + "=" + str + ";" + expires;
 }
 
-
-export function getGuessesForLocation(document: Document, location_number: number): guessHistoryEntry[] {
+export function getGuessesForLocation(
+  document: Document,
+  location_number: number
+): guessHistoryEntry[] {
   const guesses_cookie = getGuesses(document);
   const guesses = guesses_cookie.guesses;
   if (!(location_number in guesses)) {
@@ -135,7 +139,7 @@ export function saveGuess(
   location_number: number,
   x: number,
   y: number,
-  final_guess: FinalGuess,
+  final_guess: FinalGuess
 ): void {
   const current_cookie = getGuesses(document);
   if (!(location_number in current_cookie.guesses)) {
@@ -159,10 +163,15 @@ export function finishedToday(
     return false;
   }
 
-  const current_guesses = guesses_cookie.guesses[current_location] as guessHistoryEntry[];
+  const current_guesses = guesses_cookie.guesses[
+    current_location
+  ] as guessHistoryEntry[];
   for (let i = 0; i < current_guesses.length; i++) {
     const guess = current_guesses[i];
-    if (guess.final_guess == FinalGuess.Lose || guess.final_guess == FinalGuess.Win) {
+    if (
+      guess.final_guess == FinalGuess.Lose ||
+      guess.final_guess == FinalGuess.Win
+    ) {
       return true;
     }
   }
