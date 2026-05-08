@@ -24,8 +24,23 @@ export function getLocationNumber(date: Date): number {
   }
 
   console.log("day_number", day_number);
-  // Select a random number between 0 and 639 based on
-  const result = Math.round(seededRandom(day_number, 0, 639));
+
+  const max_game = 639;
+
+  // Select a random number between 1 and 639 based on the day.
+  // Previous days used an incorrect minimum value. Continue to use it so the history stays the same.
+  if (day_number <= 1378) {
+    const result = Math.round(seededRandom(day_number, 0, max_game));
+
+    // If result lands at 0, don't return and switch to the corrected randomiser since game 0 doesn't exist.
+    if (result > 0) {
+      console.log("result", result);
+      return result;
+    }
+  }
+
+  // Randomiser with corrected minimum value
+  const result = Math.round(seededRandom(day_number, 1, max_game));
   console.log("result", result);
   return result;
 }
